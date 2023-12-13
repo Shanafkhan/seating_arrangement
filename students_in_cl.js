@@ -1,5 +1,6 @@
 function allocateStudentsToRooms(coursesCapacity, utilizedRoomsCapacity) {
   const roomCoursesCapacity = Array.from({ length: utilizedRoomsCapacity.length }, () => []);
+  const roomCourseIDs = Array.from({ length: utilizedRoomsCapacity.length }, () => []);
   const roomEmptySeats = new Array(utilizedRoomsCapacity.length).fill(0);
   const courseCapacityNotFilled = new Array(coursesCapacity.length).fill(0);
 
@@ -9,12 +10,15 @@ function allocateStudentsToRooms(coursesCapacity, utilizedRoomsCapacity) {
       const j = Math.floor(coursesCapacity[courseIndex] / utilizedRoomsCapacity.length);
       if (roomCapacity >= j) {
         roomCoursesCapacity[roomIndex].push(j);
+        roomCourseIDs[roomIndex].push(courseIndex);
         utilizedRoomsCapacity[roomIndex] -= j;
       } else if (roomCapacity > 0) {
         roomCoursesCapacity[roomIndex].push(roomCapacity);
+        roomCourseIDs[roomIndex].push(courseIndex);
         utilizedRoomsCapacity[roomIndex] = 0;
       } else {
         roomCoursesCapacity[roomIndex].push(0);
+        roomCourseIDs[roomIndex].push(-1); // Placeholder for courses not assigned
       }
     }
   }
@@ -64,7 +68,7 @@ function allocateStudentsToRooms(coursesCapacity, utilizedRoomsCapacity) {
     }
   }
 
-  return roomCoursesCapacity;
+  return { roomCoursesCapacity, roomCourseIDs };
 }
 
 // Example usage
